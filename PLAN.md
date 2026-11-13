@@ -1,125 +1,125 @@
-# Shopify Strategiya Planı — 800 Gün (13.11.2026 → 21.01.2029)
+# Shopify + Agentik İdarəetmə Planı (v0.2)
 
-> Status: **v0.1 — ilk layihə.** Aşağıdakı qiymətlər 2026-cı il mənbələrindən götürülüb, bir hissəsi satıcı bloqlarıdır (qərəzli ola bilər). `⚠️` işarəsi = qərar verməzdən əvvəl rəsmi saytdan yoxlanmalıdır.
+> **Vəziyyət:** mağaza 8 gün sonra açılır. Məqsəd: Claude agentləri işin əsasını görür, sən yalnız **təsdiq edirsən**.
+> `⚠️` = qiymət/qayda yoxlanmamış mənbədən və ya yaddaşdandır, ödəməzdən əvvəl rəsmi saytdan yoxla.
 
-## 0. Əsas fikir (ən vacib hissə)
+## 0. Dürüst başlanğıc
 
-**800 günü mağazanın açılmasını gözləməklə keçirmə.** Mağaza açmaq 1–2 günlük işdir. Çətin olan: *kim alacaq, nəyi alacaq, onları ucuza necə tapacağıq.* Bunu Shopify olmadan da test etmək olar. Ona görə plan belədir:
+1. **$100.000/ay hədəfdir, plan deyil.** Bunu iki ayrı rəqəmə böl: *dövriyyə* (gəlir) və *xalis mənfəət*. Nümunə: orta sifariş $50, ROAS 2.5 olarsa, $100k dövriyyə üçün ≈2.000 sifariş və ≈$40k reklam xərci lazımdır; mənfəət isə bunun ancaq kiçik hissəsidir. Hansını nəzərdə tutursan? Cavabına görə yol dəyişir.
+2. **8 gündə mağaza açılır, satış avtomatik gəlmir.** İlk 30–60 gün test mərhələsidir. Real ilk hədəf: *ilk 50 sifariş və müsbət marja.*
+3. **Agent ≠ nəzarətsiz.** Claude hazırlayır və təklif edir, **pul xərcləyən və ictimai paylaşan hər addımı sən təsdiqləyirsən.**
+4. **Ən böyük blokerlər:** (a) Shopify Payments Azərbaycanda dəstəklənmir ⚠️ (b) Meta reklam hesabının bloklanması (bax §5).
 
-- **İlk 120 gün:** mağaza yoxdur — niş, məhsul, video və auditoriya testi.
-- **Sonra:** mağaza yalnız sübut olunmuş siqnalla (satış sorğuları, gözləmə siyahısı) açılır.
-- Sonra dayanmadan test → ölç → böyüt / öldür dövrü.
+## 1. Agent arxitekturası
 
-## 1. Harada satacağıq? (Bazar seçimi)
+Bir **Baş agent (Orchestrator)** və ixtisaslaşmış alt agentlər. Hamısı bu repoda `agents/` qovluğunda təlimat faylları (prompt + qaydalar) və `reports/` qovluğunda nəticələrlə işləyir.
 
-| Variant | Üstünlük | Risk |
+| Agent | İşi | Sən nəyi təsdiqləyirsən |
 |---|---|---|
-| **Azərbaycan (daxili)** | Dil/mədəniyyət bizimdir, çatdırılma qısadır, Cash on Delivery mümkün | Bazar kiçik, Shopify Payments yoxdur |
-| **Türkiyə / Gürcüstan / Mərkəzi Asiya** | Yaxın, oxşar mədəniyyət | Hər ölkə ayrı hüquq/ödəniş |
-| **ABŞ / Avropa (ingilis dili)** | Ən böyük alıcı gücü, Shopify və Stripe üçün ən rahat | Reklam bahalı, rəqabət sərt |
+| **Tədqiqat** | Niş, məhsul, qiymət, rəqib analizi | Məhsul seçimi |
+| **Mağaza qurucu** | Shopify səhifələri, məhsul təsvirləri, siyasətlər, SEO | Açılışdan əvvəl bütün mağaza |
+| **Kreativ** | Ssenari, hook, video planı, reklam mətni | Hər video/reklam |
+| **Reklam (Meta)** | Kampaniya strukturu, büdcə, test planı, gündəlik hesabat | Hər büdcə və kampaniya |
+| **Analitika** | Rəqəmlər: ROAS, CPA, marja; "böyüt/dəyiş/öldür" tövsiyəsi | Həftəlik qərar |
+| **Müştəri xidməti** | Email/DM cavab qaralamaları | Qeyri-standart cavablar |
 
-**İlkin tövsiyə:** Test mərhələsində ingilisdilli bazar (ABŞ/UK) və Azərbaycan paralel yoxlanır; 90 gün sonra rəqəmlərə görə biri seçilir. Qərarı rəqəm verir, hiss yox.
+**Günlük ritm:** səhər agent hesabat yazır (dünənki rəqəmlər + 3 təklif) → sən 15 dəq baxıb təsdiqləyirsən → agent icra edir.
 
-**Kanallar:** TikTok (organik + TikTok Shop), Instagram Reels, YouTube Shorts → trafik. Satış: Shopify mağaza. Meta/TikTok reklamı yalnız organikdə işləyən videoya qoyulur.
+## 2. Alət yığını (başlanğıc üçün minimal, peşəkar)
 
-## 2. Biznes modeli
-
-2026 mənbələrinin ümumi nəticəsi: sadə dropshipping zəifləyib (rəqabət, uzun çatdırılma, brend yox).
-
-| Model | Başlanğıc kapital (təxmini) | Qeyd |
-|---|---|---|
-| Dropshipping | $500–1.500 | Yalnız **məhsul testi** üçün yaxşıdır |
-| Print-on-demand (POD) | $500–1.000 | Stok riski yox, marja aşağı; dizayn bacarığı vacibdir |
-| Private label | $3.000–10.000+ | Marja yüksək (50–60%+ iddia olunur ⚠️), kapital tələb edir |
-
-**Tövsiyə (hibrid):** Dropshipping/POD ilə təhlükəsiz test → 3–5 qalib məhsulu private label-ə keçir. Bu həm ucuzdur, həm brend yaradır.
-
-## 3. Alət yığını (ən ucuz + kifayət qədər tam)
-
-### Mağaza
-- **Shopify** — qiymətlər mənbələrdə ziddiyyətlidir ⚠️: Basic ≈ $29 (illik) – $39 (aylıq); Grow ≈ $79–105; Advanced ≈ $299–399. Bir mənbə 01.11.2026-dan yeni qiymətlər (39/89/359) göstərir. **Basic + illik ödəniş** ilə başla. İlk 3 ay ucuz sınaq təklifinə bax.
-- Mövzu: Shopify-ın pulsuz mövzusu (Dawn/Horizon) — ödənişli mövzuya ehtiyac yoxdur.
-
-### Ödəniş — **ən böyük çətinlik**
-- **Shopify Payments Azərbaycanda dəstəklənmir** (Shopify icma cavabları; təsdiq tarixi köhnə ola bilər ⚠️).
-- Variantlar (araşdırılmalı): xaricdə şirkət (ABŞ LLC / Estoniya) + Stripe/PayPal; yerli bank gateway-lər (Kapital Bank və s.) yerli satış üçün; Payoneer.
-- **Qərar vermək üçün tapşırıq:** hüquqi mütəxəssislə danışıb ən sadə sxemi seç. Bu plandakı #1 blokerdir.
-
-### Video (ən vacib hissə, çünki trafik buradan gəlir)
-- **CapCut** — redaktə, pulsuz/≈$15 ay. Başlanğıc üçün kifayətdir.
-- **OpusClip** — uzun videonu qısalara bölür (pulsuz/≈$15).
-- **AI UGC alətləri** (Revid, Hooked ≈$29 və s.) — yalnız organik test işlədikdən sonra; satıcı bloqlarının reytinqlərinə inanma, 1 ay sınaq et.
-- **Telefon + təbii işıq + real insan** hələ də ən ucuz və çox vaxt ən yaxşı variantdır.
-
-### Digər
-- Email/SMS: Klaviyo və ya Shopify Email (pulsuz səviyyədən başla).
-- Analitika: Shopify analytics + Meta/TikTok pixel; Google Sheets-də həftəlik cədvəl.
-- Məhsul tədarükü: AliExpress/CJ (test), sonra birbaşa zavod (Alibaba, Türkiyə).
-
-**Büdcə hədəfi (ilk 6 ay):** alətlər ≈ $50–80/ay + test reklamı ≈ $300–600/ay. Üstünə şirkət/ödəniş qurulumu.
-
-## 4. Videonu viral etmək — sistem
-
-Viral olmaq təsadüf deyil, **çox sayda təcrübə**dir. Qayda: nə qədər çox test, o qədər çox şans.
-
-1. **Həcm:** həftədə 10–15 qısa video (15–30 san).
-2. **Hook:** ilk 2 saniyə qərar verir. Hər məhsula 5 fərqli hook yaz.
-3. **Struktur:** Hook → problem → nümayiş → sübut → CTA.
-4. **Ölçü:** 3 san tutma faizi, orta izləmə vaxtı, paylaşma/saxlama sayı. 1.000 baxışdan sonra qərar ver.
-5. **Qaydalar:** işləyəni 5 variantda təkrarla, işləməyəni 7 gündən sonra öldür.
-6. **Orijinallıq:** başqasının videosunu kopyalama, trendi öz məhsulunla uyğunlaşdır.
-
-## 5. Yol xəritəsi (800 gün)
-
-| Faza | Günlər | Məqsəd | Çıxış meyarı |
+| İş | Alət | Təxmini qiymət ⚠️ | Qeyd |
 |---|---|---|---|
-| **A. Tədqiqat** | 1–30 | 3 niş, 10 məhsul ideyası, rəqib analizi, ödəniş sxeminin araşdırılması | Seçilmiş 2 niş + ödəniş yolu aydın |
-| **B. Organik test** | 31–120 | TikTok/Reels hesabı, 100+ video, gözləmə siyahısı | Ən azı 1 məhsulda sabit baxış + "haradan alım?" sorğuları |
-| **C. Mağaza + ilk satış** | 121–240 | Shopify qurulumu, ilk 3 məhsul, kiçik reklam testi | İlk 50 sifariş, marja hesablanıb |
-| **D. Optimallaşdırma** | 241–450 | Qalibləri böyüt, itirənləri öldür, email, sürətlənmiş reklam | Müsbət reklam gəliri (ROAS > break-even) |
-| **E. Brendləşmə** | 451–650 | Private label, təkrar alıcılar, ikinci bazar | Təkrar alış > 20% (hədəf) |
-| **F. Miqyas** | 651–800 | Avtomatlaşdırma, komanda/freelancer, yeni kanal | Sabit aylıq mənfəət, sistem məndən asılı deyil |
+| Mağaza | **Shopify Basic** | ~$29–39/ay | Pulsuz mövzu (Dawn) kifayətdir |
+| Agent beyni | **Claude** (Claude Code / Pro-Max) | ~$20–100+/ay | Limiti nəzərə al: ağır işi planla |
+| Redaktə | **CapCut** | pulsuz / ~$15 | Başlanğıcda pulsuz |
+| Uzun → qısa video | OpusClip | pulsuz / ~$15 | İstəyə bağlı |
+| Səs/səsləndirmə | ElevenLabs | pulsuz səviyyə / ~$5–22 | Azərbaycan dili keyfiyyətini yoxla |
+| AI video/UGC | Hooked, Revid və s. | ~$29+ | **Yalnız organik test işlədikdən sonra** |
+| Şəkil/dizayn | Canva | pulsuz / ~$15 | Claude Canva ilə də qoşula bilər |
+| Email | Shopify Email → sonra Klaviyo | pulsuz başlanğıc | |
+| Rəqib reklamları | **Meta Ad Library** (rəsmi, pulsuz) | pulsuz | §4 |
+| Tədarük | CJ Dropshipping / AliExpress / Alibaba | məhsul qiyməti | Nümunə sifariş et |
+| İdarə | GitHub (bu repo) + Google Sheets | pulsuz | Hesabatlar və tapşırıqlar |
 
-> Mağazanın "rəsmi açılışı" burada ≈ 120-ci gündür. Əgər sən mağazanı birbaşa gün 800 hazır olmalı hesab edirsənsə, B fazasını uzadıb C-ni gec başlada bilərik — amma tövsiyəm tez açmaqdır.
+**Realistik başlanğıc büdcəsi:** alətlər ≈ **$80–150/ay**, reklam testi ≈ **$20–50/gün** (≈$600–1.500/ay) + məhsul nümunələri $50–200 + ödəniş/şirkət qurulumu (məbləğ qurulumdan asılıdır).
 
-## 6. Harada çətinlik çəkəcəyik
+## 3. 8 günlük açılış planı
 
-1. **Ödəniş qəbulu** (Shopify Payments yoxdur) — həll gün 30-a qədər.
-2. **Hüquqi qurum və vergi** — xaricə satış üçün şirkət strukturu.
-3. **Reklam qiyməti və hesab bloklanması** — Meta/TikTok yeni hesablara sərt yanaşır.
-4. **Çatdırılma müddəti və geri qaytarma** — dropshipping-in ən böyük şikayət mənbəyi.
-5. **Məhsul keyfiyyəti** — öncə nümunə sifariş et, sonra sat.
-6. **Motivasiya** — 800 gün uzundur; həftəlik icmal + aylıq hədəf vacibdir.
+| Gün | İş | Kim |
+|---|---|---|
+| **1** | Bazar (ABŞ/UK ingilis dili vs. yerli) + niş seçimi, 10 məhsul namizədi | Tədqiqat agenti → sən seçirsən |
+| **2** | **Ödəniş sxemi qərarı** (xaricdə şirkət + Stripe/PayPal, yoxsa yerli gateway). Hüquqi/mühasib məsləhəti. Meta Business hesabı + domen | Sən (agent sənəd siyahısı hazırlayır) |
+| **3** | Shopify qurulumu: mövzu, naviqasiya, məhsul səhifələri, siyasət səhifələri (qaytarma, gizlilik, çatdırılma), vergi | Mağaza agenti |
+| **4** | Məhsul nümunələri sifariş, təchizatçı müqayisəsi, qiymət/marja cədvəli | Tədqiqat + Analitika |
+| **5** | Rəqib reklam analizi (§4), 10 hook, 5 video ssenarisi | Kreativ agent |
+| **6** | İlk 5–10 video çəkilişi/redaktəsi, TikTok/Instagram hesabları, pixel quraşdırması | Sən + Kreativ |
+| **7** | Reklam kampaniya strukturu, hesabat cədvəli, test ödənişi (real sifariş), mağazanın yoxlanışı | Reklam + sən |
+| **8** | **Açılış.** Organik paylaşım + kiçik reklam testi | Sən təsdiqləyirsən |
 
-## 7. Həftəlik ritm
+Qayda: gün 2-də ödəniş yolu aydın deyilsə, açılış **dayanır**; ödənişsiz mağaza sifariş qəbul etmir.
 
-- **Bazar ertəsi:** niş/məhsul seçimi
-- **Çərşənbə axşamı–Çərşənbə:** video çək və redaktə et
-- **Cümə axşamı:** paylaş + şərhlərə cavab
-- **Cümə:** statistikaya bax, 1 hipotez yaz
-- **Bazar:** növbəti həftənin testləri
-- **Şənbə:** hesabat (≈30 dəq) və qərar: *böyüt / dəyiş / öldür*
+## 4. Rəqib və reklam analizi (agentik)
 
-## 8. Növbəti addımlar (bu həftə)
+- **Meta Ad Library** (facebook.com/ads/library): rəsmi və açıqdır. Rəqibin aktiv reklamları, nə qədər müddətdir işlədiyi (uzun işləyən = çox güman qazanclı) görünür. Agent ekran görüntülərini/mətnləri oxuyub təhlil edir: hook növü, vəd, təklif, video uzunluğu, CTA.
+- **TikTok Creative Center** (pulsuz): trend reklamlar və səslər.
+- **Çıxış:** `reports/competitors.md` — rəqib başına: nə deyirlər, nəyi təkrar edirik, **nəylə fərqlənirik** (daha yaxşı təklif, daha güclü zəmanət, daha yaxşı hook, yerli bazara uyğunluq).
+- **Etməyəcəklərimiz:** Instagram-dan kütləvi scraping və hesabla avtomatlaşdırılmış giriş. Bu Meta qaydalarını pozur ⚠️ və hesabın bağlanmasına səbəb ola bilər. Ad Library kifayət qədər güclüdür.
 
-1. Hansı bazarla başlayacağımızı seç (bölmə 1).
-2. Büdcə həddini yaz (aylıq neçə $ ayıra bilərik?).
-3. Ödəniş sxemi üçün hüquqi/mühasib məsləhəti.
-4. Niş ideyalarının siyahısını çıxart (məndən 20 ideya istəyə bilərsən).
-5. TikTok və Instagram hesablarını aç.
+## 5. Meta reklamı: agent necə işləyir, risklər
 
-## Açıq suallar (cavablarına görə planı dəqiqləşdirəcəyik)
+**Üç variant (təhlükəsizlik sırası ilə):**
+1. **Agent hazırlayır, sən Ads Manager-də yerləşdirirsən** — ən təhlükəsiz. Agent kampaniya strukturunu, mətnləri, auditoriyanı hazır cədvəl kimi verir.
+2. **Rəsmi Meta Marketing API** ilə agent kampaniya yaradır (ilk dəfə **PAUSED**, sən aktiv edirsən). Developer app və icazələr tələb edir ⚠️. Peşəkar və stabil yol.
+3. **Chrome extension / brauzer avtomatlaşdırması** ilə Ads Manager-də klikləmə. Texniki mümkündür (Claude in Chrome kimi), amma **ən riskli**: Meta qeyri-adi davranışı və yeni hesabları sərt yoxlayır, hesab bloklana bilər. Yalnız kiçik, təsdiqlənmiş addımlarda və **sən izləyərək** işlət.
 
-- Aylıq nə qədər büdcə və gündə neçə saat vaxt ayıra bilərsən?
-- Şirkət/fərdi sahibkar statusu var, yoxsa şəxsi?
-- Ən yaxın niş maraqların hansılardır (moda, ev, texnologiya, ev heyvanları...)?
-- Özün kamera qarşısına çıxmaq istəyirsən, yoxsa üzsüz kontent?
+**Tövsiyə:** 1 ilə başla → ilk satışlardan sonra 2-yə keç → 3-ü ancaq zəruri olanda.
 
-## Mənbələr
+**Reklam strukturu (başlanğıc):** 1 kampaniya, Advantage+ satış, gündə $20–50, 3–5 kreativ × 2–3 hook; 3–4 gün sonra baxış: öldür / saxla / böyüt. Büdcəni gündə 20%-dən artıq qaldırma.
 
-- Shopify qiymətləri: [NerdWallet](https://www.nerdwallet.com/article/small-business/shopify-pricing), [Sellfy](https://sellfy.com/blog/shopify-pricing/), [Toolradar](https://toolradar.com/tools/shopify/pricing)
-- Azərbaycanda Shopify Payments: [Shopify icması](https://community.shopify.com/t/does-shopify-payments-work-in-azerbaijan-need-help-with-setup-issues/296146), [CartDNA](https://cartdna.com/shopify-payment-guide/europe/azerbaijan)
-- Video alətləri: [Jupitrr](https://jupitrr.com/best/ugc-video-editors), [Dupple](https://dupple.com/learn/best-ai-for-video-editing)
-- Biznes modelləri: [Printful](https://www.printful.com/blog/dropshipping-vs-private-label), [Branvas](https://branvas.com/blogs/news/dropshipping-vs-print-on-demand)
+**Əlavə pozuntu riskləri:** reklamda yalan vəd, "əvvəl/sonra" iddiaları, sağlamlıq/maliyyə iddiaları, başqasının məzmunu, qadağan məhsullar. Agentin qaydalarında bunlar sərt filtr olmalıdır.
 
-*Qeyd: bu mənbələr əsasən satıcı bloqlarıdır. Meta/TikTok reklam qiymətləri və TikTok Shop komissiyaları hələ araşdırılmayıb — növbəti sessiyanın ilk işi.*
+## 5.1 Hesab təhlükəsizliyi
+
+- Ayrı Meta Business Manager, 2FA, domen təsdiqi, düzgün ödəniş kartı.
+- Parolları/tokenləri agentə **çatdırma**; mümkünsə API tokenləri məhdud icazə ilə.
+- Agent heç vaxt kartdan **təsdiqsiz** ödəniş etməməlidir.
+
+## 6. Viral video sistemi (agentik)
+
+1. **Kreativ agent** hər məhsula: 5 hook, 3 ssenari (15–30 san), ekran mətni, çəkiliş siyahısı yazır.
+2. **Sən** telefonla çəkirsən (təbii işıq) və ya AI/stok ilə hazırlanır. İlk 2 saniyə qərar verir.
+3. **CapCut** ilə redaktə (altyazı mütləqdir, çoxu səssiz baxır).
+4. Paylaşım: TikTok, Reels, Shorts — eyni video, 3 platforma.
+5. **Analitika agenti:** 3 san tutma, orta izləmə, saxlama/paylaşma; 1.000 baxışdan sonra: qalib → 5 variant, qeyri-qalib → öldür.
+6. Həftədə **10–15 video** hədəfi; viral = çox sayda test.
+
+## 7. Real mənzərə: $100k/ay
+
+| Nəticə | Nə lazımdır |
+|---|---|
+| ≈$100k dövriyyə | 2.000 sifariş/ay (AOV $50), ≈$30–40k reklam, sabit qalib məhsul |
+| ≈$100k mənfəət | Bunun 3–5 qatı dövriyyə və ya yüksək marjalı private label məhsul |
+
+Bu, əksər mağazaların 1-ci ayında çatmadığı hədəfdir. Yol: **test → 1–3 qalib → miqyas → brend.** Hər mərhələdə rəqəmə baxıb qərar veririk.
+
+## 8. Mənim sənə lazım olanlar (cavab ver)
+
+1. Hədəf: $100k **dövriyyə**, yoxsa **xalis mənfəət**? Nə vaxta qədər?
+2. Başlanğıc üçün real büdcə: alətlər + reklam + məhsul.
+3. Hansı bazar: ABŞ/UK, Türkiyə, yoxsa Azərbaycan?
+4. Hüquqi qurum/ödəniş: Azərbaycan vergi ödəyicisisən? Xaricdə şirkət/hesab açmaq mümkündürmü?
+5. Niş ideyan varmı? Yoxdursa, tədqiqat agenti 10 ideya çıxarar.
+6. Özün kamera qarşısına çıxacaqsan, yoxsa üzsüz (əl, məhsul, səs)?
+
+## 9. Növbəti addım
+
+Cavablarını verən kimi: (a) `agents/` qovluğunda agent təlimatlarını yazıram, (b) 1-ci gün tədqiqatı (niş, məhsul, rəqiblər) üçün axtarış edirəm. Qiymətlər və qaydalar ödəməzdən əvvəl rəsmi saytdan yenidən yoxlanacaq.
+
+## Mənbələr (əvvəlki araşdırmadan)
+
+- [NerdWallet: Shopify pricing](https://www.nerdwallet.com/article/small-business/shopify-pricing)
+- [Shopify icması: Azərbaycanda Shopify Payments](https://community.shopify.com/t/does-shopify-payments-work-in-azerbaijan-need-help-with-setup-issues/296146)
+- [Printful: dropshipping vs private label](https://www.printful.com/blog/dropshipping-vs-private-label)
+- [Jupitrr: UGC video editors](https://jupitrr.com/best/ugc-video-editors)
+
+*Bu versiyadakı Meta və alət qiymətləri, API qaydaları araşdırma ilə təsdiqlənməyib, yaddaşa əsaslanır.*
