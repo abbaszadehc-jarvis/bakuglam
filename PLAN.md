@@ -111,6 +111,11 @@ Bu, əksər mağazaların 1-ci ayında çatmadığı hədəfdir. Yol: **test →
 5. Niş ideyan varmı? Yoxdursa, tədqiqat agenti 10 ideya çıxarar.
 6. Özün kamera qarşısına çıxacaqsan, yoxsa üzsüz (əl, məhsul, səs)?
 
+## 8.1 Sürətli test mühərriki (v0.3)
+
+Daimi təlimat `CLAUDE.md`-dədir (Claude hər sessiyada özü oxuyur, sənin təkrar öyrətməyinə ehtiyac yoxdur). Test sistemi `playbooks/test-engine.md`, parametrlər `state/config.md`, nəticələr `state/tests.csv`.
+Əsas: "hər saat yeni məhsul" = boru kəmərinə hər saat yeni namizəd girir; sürəti **büdcə** müəyyən edir. Claude gündə 1–2 toplu sessiyada düşünür, skript/API saatlıq icranı görür, Meta hesab xərc limiti isə təhlükəsizlik çəpəridir.
+
 ## 9. Növbəti addım
 
 Cavablarını verən kimi: (a) `agents/` qovluğunda agent təlimatlarını yazıram, (b) 1-ci gün tədqiqatı (niş, məhsul, rəqiblər) üçün axtarış edirəm. Qiymətlər və qaydalar ödəməzdən əvvəl rəsmi saytdan yenidən yoxlanacaq.
