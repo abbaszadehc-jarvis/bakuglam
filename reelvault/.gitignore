@@ -1,0 +1,8 @@
+data/
+vault/
+urls.txt
+failed.txt
+INDEX.md
+claude_saves.md
+*cookies*.txt
+__pycache__/
