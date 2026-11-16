@@ -92,6 +92,46 @@ def cmd_fetch(a):
         print(f"{len(failed)} post alinmadi -> failed.txt")
 
 
+def _fix(s):
+    """Instagram ixraci UTF-8-i yanlis kodlayir (mojibake); duzeldir."""
+    try:
+        return s.encode("latin-1").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return s
+
+
+def cmd_fromexport(a):
+    """saved_posts.json icinde caption hazir gelir -> yuklemeye ehtiyac yoxdur."""
+    p = Path(a.source)
+    f = p if p.is_file() else next(p.rglob("saved_posts.json"), None)
+    if not f:
+        sys.exit("saved_posts.json tapilmadi")
+    items = json.loads(f.read_text(encoding="utf-8"))
+    n = 0
+    for it in items:
+        lv = it.get("label_values", [])
+        if not lv or "href" not in lv[0]:
+            continue
+        m = URL_RE.search(lv[0]["href"])
+        if not m:
+            continue
+        code = m.group(2)
+        caption = _fix(lv[1].get("value", "")) if len(lv) > 1 else ""
+        owner = "?"
+        for e in lv:
+            for sub in e.get("dict", []):
+                inner = sub.get("dict", [])
+                if len(inner) >= 3 and inner[2].get("value"):
+                    owner = _fix(inner[2]["value"])
+        d = DATA / code
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "info.json").write_text(json.dumps({
+            "description": caption, "uploader": owner, "webpage_url": lv[0]["href"],
+            "upload_date": str(it.get("timestamp", ""))}, ensure_ascii=False), encoding="utf-8")
+        n += 1
+    print(f"{n} post data/ qovluguna yazildi (caption ile). Indi: python reelvault.py build")
+
+
 def cmd_transcribe(a):
     try:
         from faster_whisper import WhisperModel
@@ -162,8 +202,9 @@ def main():
     f.add_argument("--audio", action="store_true", help="audio da yukle (transkript ucun)")
     t = sp.add_parser("transcribe"); t.add_argument("--model", default="small")
     sp.add_parser("build")
+    x = sp.add_parser("fromexport"); x.add_argument("source")
     a = ap.parse_args()
-    {"urls": cmd_urls, "fetch": cmd_fetch, "transcribe": cmd_transcribe, "build": cmd_build}[a.cmd](a)
+    {"urls": cmd_urls, "fetch": cmd_fetch, "transcribe": cmd_transcribe, "build": cmd_build, "fromexport": cmd_fromexport}[a.cmd](a)
 
 
 if __name__ == "__main__":
